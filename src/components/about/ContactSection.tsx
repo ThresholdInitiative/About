@@ -8,6 +8,10 @@ export default function ContactSection() {
   const t = useTranslations('contact');
   const tf = useTranslations('footer');
 
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@vospek.com';
+  const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE || '+1 (555) 123-4567';
+  const contactAddress = process.env.NEXT_PUBLIC_CONTACT_ADDRESS || '123 Innovation Drive, San Francisco, CA 94102';
+
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,10 +43,10 @@ export default function ContactSection() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
             <a
-              href={`mailto:${t('email')}`}
+              href={`mailto:${contactEmail}`}
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {t('email')}
+              {contactEmail}
             </a>
           </motion.div>
 
@@ -58,10 +62,10 @@ export default function ContactSection() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Phone</h3>
             <a
-              href={`tel:${t('phone')}`}
+              href={`tel:${contactPhone}`}
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {t('phone')}
+              {contactPhone}
             </a>
           </motion.div>
 
@@ -77,7 +81,7 @@ export default function ContactSection() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Address</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('address')}
+              {contactAddress}
             </p>
           </motion.div>
         </div>

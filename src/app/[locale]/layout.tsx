@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales } from '@/i18n/config';
+import ServerSchema from '@/components/ServerSchema';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -101,8 +102,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Server-side rendered Schema for SEO */}
+        <ServerSchema locale={locale} isAboutPage={true} />
+        
         {/* Preload critical resources for LCP */}
-        <link rel="preload" href="/og-image.jpg" as="image" />
+        <link rel="preload" href="/og-image.svg" as="image" />
         {/* Preload fonts if using custom ones */}
         {/* <link rel="preload" href="/fonts/inter-variable-latin.woff2" as="font" type="font/woff2" crossorigin /> */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />

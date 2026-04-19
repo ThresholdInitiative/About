@@ -9,7 +9,6 @@ import StatsSection from '@/components/about/StatsSection';
 import ProductsSection from '@/components/about/ProductsSection';
 import TeamSection from '@/components/about/TeamSection';
 import ContactSection from '@/components/about/ContactSection';
-import Schema from '@/components/Schema';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -32,7 +31,6 @@ export default async function AboutPage({
   return (
     <NextIntlClientProvider messages={messages}>
       <div className="min-h-screen">
-        <Schema />
         <Navbar />
         <main>
           <HeroSection />
