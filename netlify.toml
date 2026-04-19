@@ -1,0 +1,94 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  # Function directory for Netlify Functions (if needed)
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Ensure we're using a recent version of npm
+  NPM_VERSION = "11"
+
+# Plugins - Next.js plugin for better integration
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Redirects for internationalization and clean URLs
+[[redirects]]
+  # Handle root path - redirect to default locale
+  from = "/"
+  to = "/en"
+  status = 302
+
+[[redirects]]
+  # Handle locale prefix - ensure trailing slash for consistency
+  from = "/:locale"
+  to = "/:locale/"
+  status = 301
+  conditions = {method = ["GET"], path = "/{locale}"}
+
+[[redirects]]
+  # Handle paths without locale prefix - redirect to default locale
+  from = "/:slug*"
+  to = "/en/:slug*"
+  status = 302
+  conditions = {method = ["GET"], path = "/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
+
+[[redirects]]
+  # Handle API routes - pass through
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+[[redirects]]
+  # Handle _next assets - pass through
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  # Apply to all paths
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Performance headers
+    Cache-Control = "public, max-age=0, must-revalidate"
+    # Enable compression
+    Vary = "Accept-Encoding"
+
+[[headers]]
+  # Cache static assets for longer
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  # Cache images and media
+  for = "/*.(jpg|jpeg|png|gif|svg|ico|webp)"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  # Handle font files
+  for = "/*.(woff|woff2|ttf|eot)"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Handle 404 pages for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404
+  conditions = {method = ["GET"], path = "/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
+
+# Handle specific 404 pages for i18n
+[[redirects]]
+  from = "/:locale/*"
+  to = "/:locale/404.html"
+  status = 404
+  conditions = {method = ["GET"], path = "/:locale/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
