@@ -1,0 +1,17 @@
+# Vospek Robots.txt
+# Specifies which parts of the site search engines can crawl
+
+User-agent: *
+Allow: /
+
+# Disallow private or sensitive directories
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow specific important paths
+Allow: /_next/static/
+Allow: /favicon.ico
+
+# Sitemap location
+Sitemap: https://vospek.com/sitemap.xml
