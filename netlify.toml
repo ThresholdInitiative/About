@@ -1,94 +1,113 @@
 [build]
   command = "npm run build"
   publish = ".next"
-  # Function directory for Netlify Functions (if needed)
   functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
-  # Ensure we're using a recent version of npm
   NPM_VERSION = "11"
 
-# Plugins - Next.js plugin for better integration
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Redirects for internationalization and clean URLs
+# Internationalization redirects
 [[redirects]]
-  # Handle root path - redirect to default locale
   from = "/"
   to = "/en"
   status = 302
 
 [[redirects]]
-  # Handle locale prefix - ensure trailing slash for consistency
-  from = "/:locale"
-  to = "/:locale/"
+  from = "/en"
+  to = "/en/"
   status = 301
-  conditions = {method = ["GET"], path = "/{locale}"}
 
 [[redirects]]
-  # Handle paths without locale prefix - redirect to default locale
-  from = "/:slug*"
-  to = "/en/:slug*"
-  status = 302
-  conditions = {method = ["GET"], path = "/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
+  from = "/zh"
+  to = "/zh/"
+  status = 301
 
+# Static assets pass through
 [[redirects]]
-  # Handle API routes - pass through
-  from = "/api/*"
-  to = "/api/:splat"
-  status = 200
-
-[[redirects]]
-  # Handle _next assets - pass through
   from = "/_next/*"
   to = "/_next/:splat"
   status = 200
 
-# Headers for security and performance
+# API routes pass through
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Root index for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers for all responses
 [[headers]]
-  # Apply to all paths
   for = "/*"
   [headers.values]
-    # Security headers
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    # Performance headers
     Cache-Control = "public, max-age=0, must-revalidate"
-    # Enable compression
     Vary = "Accept-Encoding"
 
+# Long cache for static assets
 [[headers]]
-  # Cache static assets for longer
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Cache images
 [[headers]]
-  # Cache images and media
-  for = "/*.(jpg|jpeg|png|gif|svg|ico|webp)"
+  for = "*.jpg"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
 [[headers]]
-  # Handle font files
-  for = "/*.(woff|woff2|ttf|eot)"
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "*.gif"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Long cache for fonts
+[[headers]]
+  for = "*.woff"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Handle 404 pages for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 404
-  conditions = {method = ["GET"], path = "/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
+[[headers]]
+  for = "*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
-# Handle specific 404 pages for i18n
-[[redirects]]
-  from = "/:locale/*"
-  to = "/:locale/404.html"
-  status = 404
-  conditions = {method = ["GET"], path = "/:locale/*", not = {path = "/_next/*"}, not = {path = "/api/*"}}
+[[headers]]
+  for = "*.ttf"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.eot"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
